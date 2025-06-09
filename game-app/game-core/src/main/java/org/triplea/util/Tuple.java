@@ -21,7 +21,6 @@ import lombok.Getter;
  */
 @Getter
 @EqualsAndHashCode
-@Deprecated
 public final class Tuple<T, S> implements Serializable {
   private static final long serialVersionUID = -5091545494950868125L;
   private final T first;

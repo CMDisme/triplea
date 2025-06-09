@@ -38,41 +38,38 @@ public class RandomStatsDetails implements Serializable {
     }
   }
 
-  private static DiceStatistic getDiceStatistic(
-      final IntegerMap<Integer> stats, final int diceSides) {
+  private static DiceStatistic getDiceStatistic(final IntegerMap<Integer> stats, final int diceSides) {
     final double average;
     final int total;
     final double median;
     final double stdDeviation;
     final double variance;
+
     if (stats.totalValues() != 0) {
-      int sumTotal = 0;
       int localTotal = 0;
-      // TODO: does this need to be updated to take data.getDiceSides() ?
+      double sum = 0;
+      double sumSquares = 0;
+
       for (int i = 1; i <= diceSides; i++) {
-        sumTotal += i * stats.getInt(i);
-        localTotal += stats.getInt(i);
+        int count = stats.getInt(i);
+        localTotal += count;
+        sum += i * count;
+        sumSquares += i * i * count;
       }
+
+      average = sum / localTotal;
+      variance = (sumSquares / localTotal) - (average * average);
+      stdDeviation = Math.sqrt(variance);
       total = localTotal;
-      average = sumTotal / ((double) stats.totalValues());
+
       // calculate median
       if (localTotal % 2 != 0) {
         median = calcMedian((localTotal / 2) + 1, diceSides, stats);
       } else {
         final double tmp1 = calcMedian((localTotal / 2), diceSides, stats);
         final double tmp2 = calcMedian((localTotal / 2) + 1, diceSides, stats);
-        median = (tmp1 + tmp2) / 2;
+        median = (tmp1 + tmp2) / 2.0;
       }
-      // calculate variance
-      double sumOfSquaredMeanDeviations = 0;
-      final double ratio = (double) localTotal / diceSides;
-      // TODO: does this need to be updated to take data.getDiceSides() ?
-      for (int i = 1; i <= diceSides; i++) {
-        sumOfSquaredMeanDeviations += Math.pow(stats.getInt(i) - ratio, 2);
-      }
-      variance = sumOfSquaredMeanDeviations / (localTotal - 1);
-      // calculate standard deviation
-      stdDeviation = Math.sqrt(variance);
     } else {
       average = 0;
       total = 0;
@@ -80,8 +77,53 @@ public class RandomStatsDetails implements Serializable {
       stdDeviation = 0;
       variance = 0;
     }
+
     return new DiceStatistic(average, total, median, stdDeviation, variance);
   }
+//  private static DiceStatistic getDiceStatistic(
+//      final IntegerMap<Integer> stats, final int diceSides) {
+//    final double average;
+//    final int total;
+//    final double median;
+//    final double stdDeviation;
+//    final double variance;
+//    if (stats.totalValues() != 0) {
+//      int sumTotal = 0;
+//      int localTotal = 0;
+//      // TODO: does this need to be updated to take data.getDiceSides() ?
+//      for (int i = 1; i <= diceSides; i++) {
+//        sumTotal += i * stats.getInt(i);
+//        localTotal += stats.getInt(i);
+//      }
+//      total = localTotal;
+//      average = sumTotal / ((double) stats.totalValues());
+//      // calculate median
+//      if (localTotal % 2 != 0) {
+//        median = calcMedian((localTotal / 2) + 1, diceSides, stats);
+//      } else {
+//        final double tmp1 = calcMedian((localTotal / 2), diceSides, stats);
+//        final double tmp2 = calcMedian((localTotal / 2) + 1, diceSides, stats);
+//        median = (tmp1 + tmp2) / 2;
+//      }
+//      // calculate variance
+//      double sumOfSquaredMeanDeviations = 0;
+//      final double ratio = (double) localTotal / diceSides;
+//      // TODO: does this need to be updated to take data.getDiceSides() ?
+//      for (int i = 1; i <= diceSides; i++) {
+//        sumOfSquaredMeanDeviations += Math.pow(stats.getInt(i) - ratio, 2);
+//      }
+//      variance = sumOfSquaredMeanDeviations / (localTotal - 1);
+//      // calculate standard deviation
+//      stdDeviation = Math.sqrt(variance);
+//    } else {
+//      average = 0;
+//      total = 0;
+//      median = 0;
+//      stdDeviation = 0;
+//      variance = 0;
+//    }
+//    return new DiceStatistic(average, total, median, stdDeviation, variance);
+//  }
 
   private static int calcMedian(
       final int centerPoint, final int diceSides, final IntegerMap<Integer> stats) {

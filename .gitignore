@@ -15,6 +15,10 @@
 *.gif
 *.mp3
 *.attach_pid*
+*.factorypath
+.zed
+.idea
+*.log
 
 bin/
 build/

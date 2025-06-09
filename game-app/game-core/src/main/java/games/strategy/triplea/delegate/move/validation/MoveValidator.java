@@ -1686,79 +1686,80 @@ public class MoveValidator {
             .andIf(hasLand, Matches.territoryAllowsCanMoveLandUnitsOverOwnedLand(player))
             .andIf(isNeutralsImpassable, noNeutral)
             .build();
-
+//    if (hasAir && )
     Route defaultRoute =
-        data.getMap()
-            .getRouteForUnits(start, end, noImpassableOrRestrictedOrNeutral, units, player);
+            data.getMap()
+                    .getRouteForUnits(start, end, noImpassableOrRestrictedOrNeutral, units, player);
     if (defaultRoute == null) {
       // Try for a route without impassable territories, but allowing restricted territories, since
       // there is a chance politics may change in the future
       defaultRoute =
-          data.getMap()
-              .getRoute(
-                  start,
-                  end,
-                  (isNeutralsImpassable
-                      ? noNeutral.and(Matches.territoryIsImpassable())
-                      : Matches.territoryIsImpassable()));
+              data.getMap()
+                      .getRoute(
+                              start,
+                              end,
+                              (isNeutralsImpassable
+                                      ? noNeutral.and(Matches.territoryIsImpassable())
+                                      : Matches.territoryIsImpassable()));
       // There really is nothing, so just return any route, without conditions
       if (defaultRoute == null) {
         return data.getMap().getRoute(start, end, it -> true);
       }
       return defaultRoute;
     }
-
-    // Avoid looking at the dependents
     final Collection<Unit> unitsWhichAreNotBeingTransportedOrDependent =
-        CollectionUtils.getMatches(
-            units,
-            Matches.unitIsBeingTransportedByOrIsDependentOfSomeUnitInThisList(units, player, true)
-                .negate());
-
-    // If start and end are land, try a land route. Don't force a land route, since planes may be
-    // moving
+            CollectionUtils.getMatches(
+                    units,
+                    Matches.unitIsBeingTransportedByOrIsDependentOfSomeUnitInThisList(units, player, true)
+                            .negate());
     boolean mustGoLand = false;
-    if (!start.isWater() && !end.isWater()) {
-      final Route landRoute =
-          data.getMap()
-              .getRouteForUnits(
-                  start,
-                  end,
-                  Matches.territoryIsLand().and(noImpassableOrRestrictedOrNeutral),
-                  units,
-                  player);
-      if ((landRoute != null)
-          && ((landRoute.numberOfSteps() <= defaultRoute.numberOfSteps())
-              || (forceLandOrSeaRoute
-                  && unitsWhichAreNotBeingTransportedOrDependent.stream()
-                      .anyMatch(Matches.unitIsLand())))) {
-        defaultRoute = landRoute;
-        mustGoLand = true;
-      }
-    }
-
-    // If the start and end are water, try and get a water route don't force a water route, since
-    // planes may be moving
     boolean mustGoSea = false;
-    if (start.isWater() && end.isWater()) {
-      final Route waterRoute =
-          data.getMap()
-              .getRouteForUnits(
-                  start,
-                  end,
-                  Matches.territoryIsWater().and(noImpassableOrRestrictedOrNeutral),
-                  units,
-                  player);
-      if ((waterRoute != null)
-          && ((waterRoute.numberOfSteps() <= defaultRoute.numberOfSteps())
-              || (forceLandOrSeaRoute
-                  && unitsWhichAreNotBeingTransportedOrDependent.stream()
-                      .anyMatch(Matches.unitIsSea())))) {
-        defaultRoute = waterRoute;
-        mustGoSea = true;
+//    if (!units.stream().allMatch(Matches.unitIsAir())) {
+      // Avoid looking at the dependents
+      // If start and end are land, try a land route. Don't force a land route, since planes may be
+      // moving
+      if (!start.isWater() && !end.isWater()) {
+        final Route landRoute =
+                data.getMap()
+                        .getRouteForUnits(
+                                start,
+                                end,
+                                Matches.territoryIsLand().and(noImpassableOrRestrictedOrNeutral),
+                                units,
+                                player);
+        if ((landRoute != null)
+                && ((landRoute.numberOfSteps() <= defaultRoute.numberOfSteps())
+                || (forceLandOrSeaRoute
+                && unitsWhichAreNotBeingTransportedOrDependent.stream()
+                .anyMatch(
+                        Matches.unitIsLand()
+                                .and(Matches.unitIsAir().or(Matches.unitIsAirborne()).negate()))))) {
+          defaultRoute = landRoute;
+          mustGoLand = true;
+        }
       }
-    }
 
+      // If the start and end are water, try and get a water route don't force a water route, since
+      // planes may be moving
+      if (start.isWater() && end.isWater()) {
+        final Route waterRoute =
+                data.getMap()
+                        .getRouteForUnits(
+                                start,
+                                end,
+                                Matches.territoryIsWater().and(noImpassableOrRestrictedOrNeutral),
+                                units,
+                                player);
+        if ((waterRoute != null)
+                && ((waterRoute.numberOfSteps() <= defaultRoute.numberOfSteps())
+                || (forceLandOrSeaRoute
+                && unitsWhichAreNotBeingTransportedOrDependent.stream()
+                .anyMatch(Matches.unitIsSea())))) {
+          defaultRoute = waterRoute;
+          mustGoSea = true;
+        }
+      }
+//    }
     // These are the conditions we would like the route to satisfy, starting with the most important
     final Predicate<Territory> hasRequiredUnitsToMove =
         Matches.territoryHasRequiredUnitsToMove(unitsWhichAreNotBeingTransportedOrDependent);
@@ -1793,7 +1794,9 @@ public class MoveValidator {
     // Try to find preferred route
     for (final Predicate<Territory> movePreference : prioritizedMovePreferences) {
       final Predicate<Territory> moveCondition;
-      if (mustGoLand) {
+      if (units.stream().allMatch(Matches.unitIsAir())) {
+        moveCondition = movePreference.and(noImpassableOrRestrictedOrNeutral);
+      }else if (mustGoLand) {
         moveCondition =
             movePreference.and(Matches.territoryIsLand()).and(noImpassableOrRestrictedOrNeutral);
       } else if (mustGoSea) {

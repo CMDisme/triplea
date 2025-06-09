@@ -5,5 +5,5 @@ scriptDir="$(dirname "$0")"
 set -o pipefail
 set -eu
 
-"$scriptDir/gradlew" spotlessApply check $@
+"$scriptDir/gradlew" -Dorg.gradle.java.home=/Library/Java/JavaVirtualMachines/zulu-15.jdk/Contents/Home spotlessApply check $@
 "$scriptDir/.build/code-convention-checks/check-custom-style"

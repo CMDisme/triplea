@@ -31,7 +31,9 @@ public class BattleListing implements Serializable {
     this.battlesMap = new EnumMap<>(BattleType.class);
     battles.stream()
         .filter(b -> !b.isEmpty())
-        .forEach(
+        .sorted(
+            (b, c) -> Integer.compare(c.getBattleType().hashCode(), b.getBattleType().hashCode()))
+        .forEachOrdered(
             b -> {
               Collection<Territory> territories = battlesMap.get(b.getBattleType());
               if (territories == null) {
@@ -65,12 +67,14 @@ public class BattleListing implements Serializable {
   }
 
   public void forEachBattle(BiConsumer<? super BattleType, ? super Territory> action) {
-    for (final Entry<BattleType, Collection<Territory>> battleTypeCollection :
-        battlesMap.entrySet()) {
-      final BattleType battleType = battleTypeCollection.getKey();
-      for (final Territory territory : battleTypeCollection.getValue()) {
-        action.accept(battleType, territory);
-      }
-    }
+    battlesMap.entrySet().stream()
+        .sorted((b, c) -> Integer.compare(c.getKey().hashCode(), b.getKey().hashCode()))
+        .forEachOrdered(
+            battleTypeCollection -> {
+              final BattleType battleType = battleTypeCollection.getKey();
+              for (final Territory territory : battleTypeCollection.getValue()) {
+                action.accept(battleType, territory);
+              }
+            });
   }
 }

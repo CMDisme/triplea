@@ -110,7 +110,7 @@ public class BattleDelegate extends BaseTripleADelegate implements IBattleDelega
       addBombardmentSources();
       needToAddBombardmentSources = false;
     }
-    battleTracker.fightAirRaidsAndStrategicBombing(bridge);
+    //    battleTracker.fightAirRaidsAndStrategicBombing(bridge);
     if (needToFireRockets) {
       // If we are loading a save-game created during battle and after the 'needToCreateRockets'
       // phase, rocketHelper can be null here.
@@ -121,7 +121,7 @@ public class BattleDelegate extends BaseTripleADelegate implements IBattleDelega
       needToFireRockets = false;
     }
     battleTracker.fightDefenselessBattles(bridge);
-    battleTracker.fightBattleIfOnlyOne(bridge);
+    // battleTracker.fightBattleIfOnlyOne(bridge);
   }
 
   @Override

@@ -172,11 +172,11 @@ public abstract class AbstractMovePanel extends ActionPanel {
     final Set<UndoableMove> movesToUndo = getMovesToUndo(units, getMoveDelegate().getMovesMade());
 
     if (movesToUndo.isEmpty()) {
-      final String error =
-          "Could not undo any moves, check that the unit has moved and that you "
-              + "can undo the move normally";
-      JOptionPane.showMessageDialog(
-          getTopLevelAncestor(), error, "Could not undo move", JOptionPane.ERROR_MESSAGE);
+      //      final String error =
+      //          "Could not undo any moves, check that the unit has moved and that you "
+      //              + "can undo the move normally";
+      //      JOptionPane.showMessageDialog(
+      //          getTopLevelAncestor(), error, "Could not undo move", JOptionPane.ERROR_MESSAGE);
       return;
     }
 

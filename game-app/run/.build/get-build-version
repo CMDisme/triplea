@@ -13,6 +13,7 @@ echo -n "$($scriptDir/get-product-version)."
 # Print the 'build' number, this is the commit number.
 # This will complete the 'major.minor.build' output, eg: '2.6.1001'
 (
-  cd $scriptDir || exit 1
-  git rev-list --count HEAD
+  echo "14898_2"
+#  cd $scriptDir || exit 1
+#  git rev-list --count HEAD
 )

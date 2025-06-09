@@ -84,6 +84,15 @@ public class UnitsDrawer extends AbstractDrawable {
         factory.getUnitImageHeight());
   }
 
+  public Rectangle getPlacementRectangle(Integer wiggleRoom) {
+    UnitImageFactory factory = uiContext.getUnitImageFactory();
+    return new Rectangle(
+        placementPoint.x - wiggleRoom,
+        placementPoint.y - wiggleRoom,
+        factory.getUnitImageWidth() + (2 * wiggleRoom),
+        factory.getUnitImageHeight() + (2 * wiggleRoom));
+  }
+
   public String getPlayer() {
     return playerName;
   }

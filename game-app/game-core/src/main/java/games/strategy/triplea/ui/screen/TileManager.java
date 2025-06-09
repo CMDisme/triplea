@@ -511,9 +511,19 @@ public class TileManager {
       final double x, final double y, final GameData gameData) {
     try (GameData.Unlocker ignored = gameData.acquireReadLock()) {
       synchronized (mutex) {
-        for (final UnitsDrawer drawer : allUnitDrawables) {
-          if (drawer.getPlacementRectangle().contains(x, y)) {
-            return Tuple.of(drawer.getTerritory(gameData), drawer.getUnits(gameData));
+        List<Integer> elements =
+            new ArrayList<Integer>() {
+              {
+                add(0);
+                add(5);
+                add(15);
+              }
+            };
+        for (Integer i : elements) {
+          for (final UnitsDrawer drawer : allUnitDrawables) {
+            if (drawer.getPlacementRectangle(i).contains(x, y)) {
+              return Tuple.of(drawer.getTerritory(gameData), drawer.getUnits(gameData));
+            }
           }
         }
         return null;

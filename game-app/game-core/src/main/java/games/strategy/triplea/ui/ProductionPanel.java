@@ -87,7 +87,6 @@ class ProductionPanel extends JPanel {
       final IntegerMap<ProductionRule> initialPurchase) {
     dialog = new JDialog(parent, bid ? "Produce (bid)" : "Produce", true);
     dialog.setContentPane(this);
-
     SwingKeyBinding.addKeyBinding(
         dialog,
         KeyCombination.of(KeyCode.ENTER, ButtonDownMask.CTRL),
@@ -99,15 +98,21 @@ class ProductionPanel extends JPanel {
     done = new JButton(doneAction);
     done.setToolTipText(
         "Click this button or press 'ctrl+enter' to confirm purchase and close this window");
+    //    done.requestFocus();
     SwingUtilities.invokeLater(() -> done.requestFocusInWindow());
     this.initRules(gamePlayer, initialPurchase);
     this.initLayout();
     this.calculateLimits();
+    //    this.grabFocus();
     dialog.pack();
     dialog.setLocationRelativeTo(parent);
     // making the dialog visible will block until it is closed
+    SwingUtilities.invokeLater(this::requestFocusInWindow);
+    dialog.setAutoRequestFocus(true);
     dialog.setVisible(true);
     dialog.dispose();
+
+    //    this.requestFocus();
     return getProduction();
   }
 

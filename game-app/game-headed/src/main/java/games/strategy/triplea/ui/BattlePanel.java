@@ -270,6 +270,7 @@ public final class BattlePanel extends ActionPanel {
           } else {
             battleWindow.setVisible(false);
           }
+          //          battleWindow.requestFocus();
           currentBattleDisplayed = battleId;
         });
   }

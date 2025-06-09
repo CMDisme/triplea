@@ -183,6 +183,7 @@ public class BattleDisplay extends JPanel {
       }
     }
     initLayout();
+    // actionButton.requestFocus();
   }
 
   void cleanUp() {

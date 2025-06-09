@@ -506,6 +506,7 @@ class WW2V3Year41Test extends AbstractClientSettingTestCase {
     battleDelegate.setDelegateBridgeAndPlayer(bridge);
     assertEquals(2, transports.get(0).getTransporting().size());
     battleDelegate.start();
+    fight(battleDelegate(gameData), sz7);
     // battle already fought
     // make sure the infantry die with the transport
     assertTrue(
@@ -1305,6 +1306,7 @@ class WW2V3Year41Test extends AbstractClientSettingTestCase {
     whenGetRandom(bridge).thenAnswer(withValues(2, 2)).thenAnswer(withValues(1, 5));
     battleDelegate(gameData).setDelegateBridgeAndPlayer(bridge);
     battleDelegate(gameData).start();
+    fight(battleDelegate(gameData), eg);
     // end result should be 2 italian infantry.
     assertEquals(3, eg.getUnitCollection().size());
   }
@@ -1802,7 +1804,7 @@ class WW2V3Year41Test extends AbstractClientSettingTestCase {
     whenGetRandom(bridge).thenAnswer(withValues(1, 5, 5)).thenAnswer(withValues(5));
     battleDelegate(gameData).setDelegateBridgeAndPlayer(bridge);
     battleDelegate(gameData).start();
-    // make sure the transports died
+    fight(battleDelegate(gameData), sz5);// make sure the transports died
     assertTrue(
         sz5.getUnitCollection().getMatches(Matches.unitIsOwnedBy(germans(gameData))).isEmpty());
     thenRemotePlayerShouldNotBeAskedToRetreat(bridge);

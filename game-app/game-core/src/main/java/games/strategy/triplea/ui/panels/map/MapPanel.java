@@ -212,33 +212,7 @@ public class MapPanel extends ImageScrollerLargeView {
           // this can't be mouseClicked, since a lot of people complain that clicking doesn't work
           // well
           @Override
-          public void mouseReleased(final MouseEvent e) {
-            final MouseDetails md = convert(e);
-            final double scaledMouseX = e.getX() / scale;
-            final double scaledMouseY = e.getY() / scale;
-            final double x = normalizeX(scaledMouseX + getXOffset());
-            final double y = normalizeY(scaledMouseY + getYOffset());
-            final @Nullable Territory terr = getTerritory(x, y);
-            if (terr != null) {
-              notifyTerritorySelected(terr, md);
-            }
-            if (e.getButton() == 4 || e.getButton() == 5) {
-              // the numbers 4 and 5 stand for the corresponding mouse button
-              lastActive = is4Pressed && is5Pressed ? (e.getButton() == 4 ? 5 : 4) : -1;
-              // we only want to change the variables if the corresponding button was released
-              is4Pressed = e.getButton() != 4 && is4Pressed;
-              is5Pressed = e.getButton() != 5 && is5Pressed;
-              // we want to return here, because otherwise a menu might be opened
-              return;
-            }
-            if (!unitSelectionListeners.isEmpty()) {
-              Tuple<Territory, List<Unit>> tuple = tileManager.getUnitsAtPoint(x, y, gameData);
-              if (tuple == null) {
-                tuple = Tuple.of(terr, List.of());
-              }
-              notifyUnitSelected(tuple.getSecond(), tuple.getFirst(), md);
-            }
-          }
+          public void mouseReleased(final MouseEvent e) {}
 
           @Override
           public void mousePressed(final MouseEvent e) {
@@ -264,6 +238,32 @@ public class MapPanel extends ImageScrollerLargeView {
                   });
             }
             lastActive = e.getButton();
+            final MouseDetails md = convert(e);
+            final double scaledMouseX = e.getX() / scale;
+            final double scaledMouseY = e.getY() / scale;
+            final double x = normalizeX(scaledMouseX + getXOffset());
+            final double y = normalizeY(scaledMouseY + getYOffset());
+            final @Nullable Territory terr = getTerritory(x, y);
+            //            final @Nullable Territory terr = currentTerritory;
+            if (terr != null) {
+              notifyTerritorySelected(terr, md);
+            }
+            if (e.getButton() == 4 || e.getButton() == 5) {
+              // the numbers 4 and 5 stand for the corresponding mouse button
+              lastActive = is4Pressed && is5Pressed ? (e.getButton() == 4 ? 5 : 4) : -1;
+              // we only want to change the variables if the corresponding button was released
+              is4Pressed = e.getButton() != 4 && is4Pressed;
+              is5Pressed = e.getButton() != 5 && is5Pressed;
+              // we want to return here, because otherwise a menu might be opened
+              return;
+            }
+            if (!unitSelectionListeners.isEmpty()) {
+              Tuple<Territory, List<Unit>> tuple = tileManager.getUnitsAtPoint(x, y, gameData);
+              if (tuple == null) {
+                tuple = Tuple.of(terr, List.of());
+              }
+              notifyUnitSelected(tuple.getSecond(), tuple.getFirst(), md);
+            }
           }
         });
     addMouseMotionListener(
