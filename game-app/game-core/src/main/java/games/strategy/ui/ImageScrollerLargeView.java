@@ -311,9 +311,13 @@ public class ImageScrollerLargeView extends JComponent {
     final int oldHeight = model.getBoxHeight();
     setScale(newScale);
     final Point mouse = getMousePosition();
-    final int dx = (int) (mouse.getX() / getWidth() * (oldWidth - model.getBoxWidth()));
-    final int dy = (int) (mouse.getY() / getHeight() * (oldHeight - model.getBoxHeight()));
-    model.set(model.getX() + dx, model.getY() + dy);
+    if (mouse != null) {
+      final int dx = (int) (mouse.getX() / getWidth() * (oldWidth - model.getBoxWidth()));
+      final int dy = (int) (mouse.getY() / getHeight() * (oldHeight - model.getBoxHeight()));
+      model.set(model.getX() + dx, model.getY() + dy);
+    } else {
+      getMousePosition();
+    }
   }
 
   public double getMinScale() {

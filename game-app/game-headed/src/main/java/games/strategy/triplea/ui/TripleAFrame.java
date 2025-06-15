@@ -441,6 +441,9 @@ public final class TripleAFrame extends JFrame implements QuitHandler {
                 (int) ((size.getWidth() - 200) / 2),
                 (int) ((size.getHeight() - 100) / 2));
           }
+          public boolean contains(int x, int y) {
+            return false; // don't block mouse events
+          }
         });
     // force a data change event to update the UI for edit mode
     dataChangeListener.gameDataChanged(ChangeFactory.EMPTY_CHANGE);

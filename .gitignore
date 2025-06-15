@@ -24,6 +24,21 @@ bin/
 build/
 out/
 
+MacOS
+Windows
+Releases
+buildFiles/BuildExecutables/macos*
+buildFiles/BuildExecutables/windows/jre
+buildFiles/macos/Resources/jre.bundle
+buildFiles/windows/jre
+
+!buildFiles/macos
+!buildFiles/macos/MacOS
+!buildFiles/macos/MacOS/Resources
+!buildFiles/macos/MacOS/Resources/app
+!buildFiles/windows
+!buildFiles/BuildExecutables/windows
+
 game-app/smoke-testing/src/test/resources/save-games/
 
 game-headed/triplea.log

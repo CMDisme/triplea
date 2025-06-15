@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CFBundleName</key>
+	<string>TripleA Chris Edition</string>
+	<key>CFBundleDisplayName</key>
+	<string>TripleA Chris Edition</string>
+	<key>CFBundleIdentifier</key>
+	<string>org.triplea.game</string>
+	<key>CFBundleIconFile</key>
+	<string>app.icns</string>
+	<key>CFBundleVersion</key>
+	<string>1.0</string>
+	<key>CFBundleExecutable</key>
+	<string>launcher</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+</dict>
+</plist>

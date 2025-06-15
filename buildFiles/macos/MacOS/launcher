@@ -1,0 +1,5 @@
+#!/bin/bash
+DIR="$(cd "$(dirname "$0")" && pwd)"
+cd "$DIR/../Resources/app"
+ICON="$DIR/../Resources/app.icns"
+../jre.bundle/Contents/Home/bin/java -Xmx4G --add-opens java.desktop/com.apple.eawt.event=ALL-UNNAMED -Xdock:name="TripleA Chris Modified" -Xdock:icon="$ICON" -jar "./bin/triplea-game-headed-2.7+14904.jar" "$@"

@@ -1,0 +1,1 @@
+x86_64-w64-mingw32-g++ main.cpp app.res -mwindows -std=c++17 -Os -s -static -static-libgcc -static-libstdc++ -ffunction-sections -fdata-sections -Wl,--gc-sections -I"./jre/include" -I"./jre/include/win32" -L"./jre/lib" -o TripleA\ Chris\ Modified.exe

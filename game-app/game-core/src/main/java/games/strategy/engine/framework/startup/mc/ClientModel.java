@@ -183,7 +183,7 @@ public class ClientModel implements IMessengerErrorListener {
                 SwingAction.invokeAndWaitResult(
                     () -> {
                       final ClientOptions options =
-                          new ClientOptions(ui, playername, GameRunner.PORT, "127.0.0.1");
+                          new ClientOptions(ui, playername, GameRunner.PORT, "home.xxo8.net");
                       options.setLocationRelativeTo(ui);
                       options.setVisible(true);
                       options.dispose();
