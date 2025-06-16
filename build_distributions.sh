@@ -2,7 +2,7 @@
 # Build with java 15 for compatability reasons
 gradle -Dorg.gradle.java.home=/Library/Java/JavaVirtualMachines/zulu-15.jdk/Contents/Home :game-app:game-headed:shadowJar
 
-buildVersion=$(git rev-list --count HEAD)2
+buildVersion=$(git rev-list --count HEAD)
 
 gradle downloadAssets
 
