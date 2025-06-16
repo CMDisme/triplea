@@ -30,7 +30,7 @@ cd "$DIR/../Resources/app"
 ICON="$DIR/../Resources/app.icns"
 EOF
 cat << EOF >> ./MacOS/TripleA\ Chris\ Modified.app/Contents/MacOS/launcher
-"\$DIR/../Resources/jre.bundle/Contents/Home/bin/java" -Xmx4G --add-opens java.desktop/com.apple.eawt.event=ALL-UNNAMED -Xdock:name="TripleA Chris Modified" -Xdock:icon="$ICON" -jar "./bin/triplea-game-headed-2.7+${buildVersion}.jar" "$@"
+"\$DIR/../Resources/jre.bundle/Contents/Home/bin/java" -Xmx4G --add-opens java.desktop/com.apple.eawt.event=ALL-UNNAMED -Xdock:name="TripleA Chris Modified" -Xdock:icon="\$ICON" -jar "./bin/triplea-game-headed-2.7+${buildVersion}.jar" "$@"
 EOF
 chmod 755 ./MacOS/TripleA\ Chris\ Modified.app/Contents/MacOS/launcher
 
