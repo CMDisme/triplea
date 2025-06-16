@@ -2,6 +2,8 @@
 #include <jni.h>
 #include <iostream>
 #include <filesystem>
+// #include <format>
+#include <chrono>
 
 typedef jint (JNICALL *CreateJavaVM_t)(JavaVM**, void**, void*);
 
@@ -60,11 +62,41 @@ int main(int argc, char** argv) {
     _putenv(newPath.c_str());
 
     // Prepare Java options
+    std::string path = DIRNAME + "\\bin"; // current directory
+    std::filesystem::path latestJar;
+    std::cout<<"search path: " << path << std::endl;
+    std::filesystem::file_time_type latestTime;
     std::string jarPath = DIRNAME + "\\bin\\triplea-game-headed-2.7+14904.jar";
+
+    try {
+        for (const auto& entry : std::filesystem::directory_iterator(path)) {
+            std::cout << entry.path() << std::endl;
+            if (entry.is_regular_file() && entry.path().extension() == ".jar") {
+                // std::cout << "JarFile: " << entry.path() << std::endl;
+                auto writeTime = std::filesystem::last_write_time(entry);
+                // std::cout << std::format("File write time is {}\n", writeTime) << std::endl;
+                if (latestJar.empty() || writeTime > latestTime) {
+                    latestTime = writeTime;
+                    latestJar = entry.path();
+                }
+            }
+        }
+
+        if (!latestJar.empty()) {
+            jarPath = latestJar.string();
+            std::cout << "Latest .jar file: " << latestJar << std::endl;
+        } else {
+            std::cout << "No .jar files found in directory, trying base 14904.\n";
+        }
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "Filesystem error: " << e.what() << std::endl;
+    } catch (const std::exception& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+    }
     std::string classPathOpt = "-Djava.class.path=" + jarPath;
     JavaVMOption options[2];
     options[0].optionString = const_cast<char*>(classPathOpt.c_str());
-    options[1].optionString = "-Dsun.java2d.dpiaware=true";
+    options[1].optionString = const_cast<char*>("-Dsun.java2d.dpiaware=true");
 
     JavaVMInitArgs vm_args;
     vm_args.version = JNI_VERSION_21;
