@@ -121,6 +121,19 @@ class EditPanel extends ActionPanel {
   private final transient UnitSelectionListener unitSelectionListener =
       new UnitSelectionListener() {
         @Override
+        public void unitsUndo(final List<Unit> units, final Territory t, final MouseDetails mouseDetails) {
+//          public void unitsUndo(final List<Unit> units, final Territory t, final MouseDetails mouseDetails) {
+//          // check if we can handle this event, are we active?
+//          if (!getListening() || !isActive()) {
+//            return;
+//          }
+//          // Bind Right Mouse Button to undo
+//          if (selectedUnits.isEmpty() && !units.isEmpty()) {
+//            undoableMovesPanel.undoMoves(getMap().getHighlightedUnits());
+//          }
+//        }
+        }
+        @Override
         public void unitsSelected(
             final List<Unit> units, final Territory t, final MouseDetails md) {
           // check if we can handle this event, are we active?

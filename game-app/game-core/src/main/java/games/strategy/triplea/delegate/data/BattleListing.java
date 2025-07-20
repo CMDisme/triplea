@@ -4,12 +4,8 @@ import games.strategy.engine.data.Territory;
 import games.strategy.triplea.delegate.battle.IBattle;
 import games.strategy.triplea.delegate.battle.IBattle.BattleType;
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.EnumMap;
-import java.util.HashSet;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 import lombok.Getter;
@@ -68,7 +64,17 @@ public class BattleListing implements Serializable {
 
   public void forEachBattle(BiConsumer<? super BattleType, ? super Territory> action) {
     battlesMap.entrySet().stream()
-        .sorted((b, c) -> Integer.compare(c.getKey().hashCode(), b.getKey().hashCode()))
+        .sorted((b, c) ->
+            {
+                // Sort if it is bombing run, then regular battle
+                int bombardCompare = (b.getKey().isBombingRun() ? -1 : 1) - (c.getKey().isBombingRun() ? -1 : 1);
+                if(bombardCompare != 0) {
+                    return bombardCompare;
+                }
+                // Sort normally
+                return Integer.compare(c.getKey().hashCode(), b.getKey().hashCode());
+            }
+        )
         .forEachOrdered(
             battleTypeCollection -> {
               final BattleType battleType = battleTypeCollection.getKey();

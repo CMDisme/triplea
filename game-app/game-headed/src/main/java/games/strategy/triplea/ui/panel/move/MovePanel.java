@@ -121,6 +121,17 @@ public class MovePanel extends AbstractMovePanel {
   private final UnitSelectionListener unitSelectionListener =
       new UnitSelectionListener() {
         @Override
+        public void unitsUndo(final List<Unit> units, final Territory t, final MouseDetails mouseDetails) {
+          // check if we can handle this event, are we active?
+          if (!getListening() || !isActive()) {
+            return;
+          }
+          // Bind Right Mouse Button to undo
+          if (selectedUnits.isEmpty() && !units.isEmpty()) {
+            undoableMovesPanel.undoMoves(getMap().getHighlightedUnits());
+          }
+        }
+        @Override
         public void unitsSelected(
             final List<Unit> units, final Territory t, final MouseDetails mouseDetails) {
           if (!getListening()) {
@@ -134,12 +145,6 @@ public class MovePanel extends AbstractMovePanel {
             return;
           }
           final boolean rightMouse = mouseDetails.isRightButton();
-          // Bind Right Mouse Button to undo
-          if (selectedUnits.isEmpty() && !units.isEmpty()) {
-            if (rightMouse) {
-              undoableMovesPanel.undoMoves(getMap().getHighlightedUnits());
-            }
-          }
           final boolean isMiddleMouseButton = mouseDetails.getButton() == MouseEvent.BUTTON2;
           final boolean noSelectedTerritory = (firstSelectedTerritory == null);
           final boolean isFirstSelectedTerritory = Objects.equals(firstSelectedTerritory, t);

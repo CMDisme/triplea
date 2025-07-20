@@ -11,4 +11,6 @@ public interface UnitSelectionListener {
    * still be correct.
    */
   void unitsSelected(List<Unit> units, Territory territory, MouseDetails md);
+
+  void unitsUndo(List<Unit> units, Territory territory, MouseDetails md);
 }

@@ -93,6 +93,8 @@ public class MapPanel extends ImageScrollerLargeView {
   private GameData gameData;
   // the territory that the mouse is currently over
   @Getter private @Nullable Territory currentTerritory;
+  private double oldX = 0;
+  private double oldY = 0;
 
   private @Nullable Territory highlightedTerritory;
   private final TerritoryHighlighter territoryHighlighter = new TerritoryHighlighter();
@@ -212,7 +214,26 @@ public class MapPanel extends ImageScrollerLargeView {
           // this can't be mouseClicked, since a lot of people complain that clicking doesn't work
           // well
           @Override
-          public void mouseReleased(final MouseEvent e) {}
+          public void mouseReleased(final MouseEvent e) {
+            final MouseDetails md = convert(e);
+            final double scaledMouseX = e.getX() / scale;
+            final double scaledMouseY = e.getY() / scale;
+            final double x = normalizeX(scaledMouseX + getXOffset());
+            final double y = normalizeY(scaledMouseY + getYOffset());
+            if (x == oldX || y == oldY) {
+              final @Nullable Territory terr = getTerritory(x, y);
+              if (terr != null) {
+                if (md.isRightButton()) {
+                  if (!unitSelectionListeners.isEmpty()) {
+                    Tuple<Territory, List<Unit>> tuple = tileManager.getUnitsAtPoint(x, y, gameData);
+                    if (tuple != null) {
+                      notifyUnitToUndo(tuple.getSecond(), tuple.getFirst(), md);
+                    }
+                  }
+                }
+              }
+            }
+          }
 
           @Override
           public void mousePressed(final MouseEvent e) {
@@ -242,7 +263,9 @@ public class MapPanel extends ImageScrollerLargeView {
             final double scaledMouseX = e.getX() / scale;
             final double scaledMouseY = e.getY() / scale;
             final double x = normalizeX(scaledMouseX + getXOffset());
+            oldX = x;
             final double y = normalizeY(scaledMouseY + getYOffset());
+            oldY = y;
             final @Nullable Territory terr = getTerritory(x, y);
             //            final @Nullable Territory terr = currentTerritory;
             if (terr != null) {
@@ -529,6 +552,13 @@ public class MapPanel extends ImageScrollerLargeView {
       final List<Unit> units, final Territory t, final MouseDetails me) {
     for (final UnitSelectionListener listener : unitSelectionListeners) {
       listener.unitsSelected(units, t, me);
+    }
+  }
+
+  private void notifyUnitToUndo(
+          final List<Unit> units, final Territory t, final MouseDetails me) {
+    for (final UnitSelectionListener listener : unitSelectionListeners) {
+      listener.unitsUndo(units, t, me);
     }
   }
 

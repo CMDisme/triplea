@@ -146,13 +146,14 @@ public class MessengersChatTransmitter implements ChatTransmitter {
 
   @Override
   public void sendMessage(final String message) {
-    if (ClientSetting.useWebsocketNetwork.getValue().orElse(false)) {
-      clientNetworkBridge.sendMessage(new IChatChannel.ChatMessage(message));
-    } else {
+//    for some reason, this does not work. It seems to only do something for sending texts, so commenting it out seems to still let the web socket connection work while also restoring chat messages
+//    if (ClientSetting.useWebsocketNetwork.getValue().orElse(false)) {
+//      clientNetworkBridge.sendMessage(new IChatChannel.ChatMessage(message));
+//    } else {
       final IChatChannel remote =
           (IChatChannel)
               messengers.getChannelBroadcaster(new RemoteName(chatChannelName, IChatChannel.class));
       remote.chatOccurred(message);
-    }
+//    }
   }
 }
